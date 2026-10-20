@@ -46,7 +46,7 @@ def build_figure(counts, mvps, height=540):
         title=dict(
             text="<b>From an American league to a global one: where NBA players were born</b><br>"
                  "<sup>Each country is coloured by how many players born there appeared in the selected season. "
-                 "⭐ marks the MVP’s birthplace. Hover a country for exact numbers.</sup>",
+                 "The star marks the MVP’s birthplace. Hover a country for exact numbers.</sup>",
             x=0.02, y=0.97,
             font=dict(size=18)
         ),
