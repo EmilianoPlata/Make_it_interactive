@@ -5,7 +5,7 @@ from choropleth_trace import choropleth_trace
 from mvp_trace import mvp_trace
 from mvp_annotation import mvp_annotation
 from season_label import season_label
-
+from discrete_colorscale import BIN_LABELS, discrete_colorscale
 
 NO_DATA_COLOR = "lightgray"
 
@@ -26,7 +26,7 @@ def build_figure(counts, mvps, height=540):
                 mvp_trace(mvps, s)
             ],
             traces=[0, 1],
-            layout=dict(annotations = mvp_annotation(mvps, s))
+            layout=dict(annotations = mvp_annotation(mvps, counts,s))
         ) 
         for s in seasons
     ] 
@@ -44,16 +44,17 @@ def build_figure(counts, mvps, height=540):
     
     fig.update_layout(
         title=dict(
-            text="<b>Where was every NBA player born?</b><br>"
-                 "<sup>Birth country of every player who appeared in each season, 1946–47 to 2025–26</sup>",
+            text="<b>From an American league to a global one: where NBA players were born</b><br>"
+                 "<sup>Each country is coloured by how many players born there appeared in the selected season. "
+                 "⭐ marks the MVP’s birthplace. Hover a country for exact numbers.</sup>",
             x=0.02, y=0.97,
             font=dict(size=18)
         ),
         coloraxis=dict(
-            colorscale="Viridis",
-            cmin=np.log10(1),
-            cmax=np.log10(max_count),
-            colorbar=dict(title="Players<br>(log scale)", tickvals=np.log10(ticks), ticktext=[str(t) for t in ticks], len=0.6, thickness=12, x=0.98)
+            colorscale=discrete_colorscale(),
+            cmin=-0.5,
+            cmax=len(BIN_LABELS) - 0.5,
+            colorbar=dict(title="Players", tickvals=list(range(len(BIN_LABELS))), ticktext=BIN_LABELS, len=0.6, thickness=14, x=0.98)
         ),
         geo=dict(
             showframe=False,
@@ -64,9 +65,9 @@ def build_figure(counts, mvps, height=540):
             countrycolor="white",
             projection_type="natural earth",
             lataxis_range=[-58, 85],
-            domain=dict(x=[0, 0.94], y=[0.08, 0.92])          
+            domain=dict(x=[0, 0.94], y=[0.08, 0.88])          
         ),
-        annotations = mvp_annotation(mvps, last),
+        annotations = mvp_annotation(mvps, counts,last),
         updatemenus=[dict(
             type="buttons", direction="left", x=0.0, y=-0.06, xanchor="left", yanchor="top", pad=dict(t=0, r=10),showactive=False,
             buttons=[

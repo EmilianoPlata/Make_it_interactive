@@ -1,12 +1,14 @@
 import numpy as np
 import plotly.graph_objects as go
 
+from count_to_bin import count_to_bin
+
 def choropleth_trace(counts, season):
     d = counts[counts["season"] == season]
     return go.Choropleth(
         locations=d["iso3"],
         locationmode="ISO-3",
-        z=np.log10(d["player_count"]),
+        z=count_to_bin(d["player_count"]),
         text=d["country_name"],
         customdata=d[["player_count", "mvp_line"]],
         coloraxis="coloraxis",

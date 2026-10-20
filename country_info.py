@@ -2,6 +2,16 @@ import pandas
 
 from largest_ring_centroid import largest_ring_centroid
 
+SHORT_NAMES = {
+    "United States of America": "USA",
+    "Republic of Serbia": "Serbia",
+    "United Republic of Tanzania": "Tanzania",
+    "Democratic Republic of the Congo": "DR Congo",
+    "Republic of the Congo": "Congo",
+    "The Bahamas": "Bahamas",
+    "United States Virgin Islands": "US Virgin Islands",
+}
+
 def build_country_info(geojson):
     
     rows = []
@@ -15,6 +25,6 @@ def build_country_info(geojson):
             continue
         
         lon, lat = largest_ring_centroid(feature["geometry"])
-        rows.append({"iso2": iso2, "iso3": iso3, "country_name":props.get("name"), "longitude": lon, "latitude": lat})
+        rows.append({"iso2": iso2, "iso3": iso3, "country_name":SHORT_NAMES.get(props.get("name"), props.get("name")), "longitude": lon, "latitude": lat})
     
     return pandas.DataFrame(rows).drop_duplicates(subset="iso2")
